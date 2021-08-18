@@ -8,6 +8,7 @@
 # RRoot,1.1.2030,Created started script
 # RRoot,1.1.2030,Added code to complete assignment 5
 # KBurke,8.14.2021,Modified code to complete assignment 6
+# KBurke,8.17.2021,Modified functions for assignment 6
 # ---------------------------------------------------------------------------- #
 
 # Data ---------------------------------------------------------------------- #
@@ -43,16 +44,15 @@ class Processor:
         return list_of_rows, 'Success'
 
     @staticmethod
-    def add_data_to_list(task, priority, list_of_rows):
-        dic_Row = {"Task": task, "Priority": priority}  # adds the input to the dictionary
-        list_of_rows.append(dic_Row)  # adds row to table
+    def add_data_to_list(dic_row, list_of_rows):
+        list_of_rows.append(dic_row)  # adds the row to table
         return list_of_rows, 'Success'
 
     @staticmethod
     def remove_data_from_list(task, list_of_rows):
-        for row in list_of_rows:
+        for row in list_of_rows: # loops through table
             if row["Task"] == task:
-                lstTable.remove(row)
+                lstTable.remove(row) # removes row that matches
                 print("Item deleted")
         return list_of_rows, 'Success'
 
@@ -71,7 +71,6 @@ class IO:
     @staticmethod
     def print_menu_Tasks():
         """  Display a menu of choices to the user
-
         :return: nothing
         """
         print('''
@@ -102,10 +101,11 @@ class IO:
         :return: nothing
         """
         print("******* The current Tasks ToDo are: *******")
-        for row in list_of_rows:
+        for row in list_of_rows: # loops through each row in the table
             print(row["Task"] + " (" + row["Priority"] + ")")
         print("*******************************************")
         print()  # Add an extra line for looks
+
 
     @staticmethod
     def input_yes_no_choice(message):
@@ -126,12 +126,12 @@ class IO:
         input('Press the [Enter] key to continue.')
 
     @staticmethod
-    def input_new_task_and_priority(task, priority, dic_row):
-        task = input("What is the task? ").lower().strip()
-        priority = input("What is the priority (high or low)?").lower().strip()
-        print("You enetered " + task + ", " + priority)
-        dic_row = {"Task": task, "Priority": priority}
-        return task, priority, dic_row
+    def input_new_task_and_priority(): # asks for task and priority then puts in dictionary
+        strTask = input("What is the task?  ").lower().strip()
+        strPriority = input("What is the priority (1 to 5, high to low)?  ").lower().strip()
+        print("You entered " + strTask + ", at priority level " + strPriority)
+        dic_row = {"Task": strTask, "Priority": strPriority} # puts data in dictionary
+        return dic_row # returns the dictionary row
 
     @staticmethod
     def input_task_to_remove(task):
@@ -152,23 +152,14 @@ while(True):
     
     # Step 4 - Process user's menu choice
     if strChoice.strip() == '1':  # Add a new Task
-        # IO.input_new_task_and_priority(strTask, strPriority, dicRow) #asks for user input
-        # input code put directly in main, will troubleshoot at later date
-        strTask = input("What is the task? ").lower().strip()
-        strPriority = input("What is the priority (1 to 5, high to low)? ").lower().strip()
-        print() # space for readability
-        print("You enetered " + strTask + " at priority level " + strPriority)
-        dicRow = {"Task": strTask, "Priority": strPriority} # put new task and priority in dictionary
-
-        Processor.add_data_to_list(strTask, strPriority, lstTable) # adds the task and priority to list
+        dic_Row = IO.input_new_task_and_priority() #asks for user input
+        Processor.add_data_to_list(dic_Row, lstTable) # adds the row to list
         IO.input_press_to_continue(strStatus)
         continue  # to show the menu
 
     elif strChoice == '2':  # Remove an existing Task
-        # IO.input_task_to_remove(strTask)
-        strTask = input("Which item would you like to remove?  ").lower().strip()
-        # input code put directly in to make script work, will investigate further later
-        Processor.remove_data_from_list(strTask, lstTable)
+        strTask =IO.input_task_to_remove(strTask) # asks user for task to remove
+        Processor.remove_data_from_list(strTask, lstTable) # removes task from the list
         IO.input_press_to_continue(strStatus)
         continue  # to show the menu
 
